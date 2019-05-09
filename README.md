@@ -59,7 +59,7 @@
 * 当前集群有几个node?
 
     ```bash
-    $ kubectl get nodes
+    kubectl get nodes
     ```
 
 * 当前集群有几个pod？
@@ -140,6 +140,61 @@
 
 * 请分别通过yaml文件和command，将上述namespace的名字修改为universe
 
+  * yaml way
+
+    ```yaml
+    # filename: kubia-manual.yaml
+    apiVersion: v1
+    kind: Namespace
+    metadata:
+      name: universe
+    ---
+    apiVersion: v1
+    kind: Pod
+    metada:
+      name: kubia-manual
+      namespace: universe
+    spec:
+      containers:
+        - image: luksa/kubia
+          name: kubia
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+    ```
+
+    ```bash
+    kubectl create -f  kubia-manual.yaml
+    kubectl delete ns world
+    ```
+
+  * command way
+
+    ```bash
+    kubectl create ns universe
+    ```
+
+    ```yaml
+    # filename: kubia-manual.yaml
+    apiVersion: v1
+    kind: Pod
+    metada:
+      name: kubia-manual
+      namespace: universe
+    spec:
+      containers:
+        - image: luksa/kubia
+          name: kubia
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+    ```
+
+    ```bash
+    kubectl create -f kubia-manual.yaml -n universe
+    kubectl delete ns world
+    ```
+
 查
 
 * 请使用command，查询所有namespace
@@ -161,3 +216,7 @@
   ```bash
   kubectl delete po --all --namespace universe
   ```
+
+### References
+
+* <https://kubernetes.io/docs/tasks/administer-cluster/namespaces-walkthrough/>
